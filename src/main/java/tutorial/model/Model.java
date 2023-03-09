@@ -30,7 +30,7 @@ public class Model extends com.amalgamasimulation.engine.Model {
     engine.scheduleStop(engine.dateToTime(scenario.getSimulationEndDt()), "Stop");
     this.scenario = scenario;
 
-    RealDistribution newRequestIntervalDistribution = new ExponentialDistribution(randomGenerator, scenario.getIntervalBetweenRequests());
+    RealDistribution newRequestIntervalDistribution = new ExponentialDistribution(randomGenerator, scenario.getIntervalBetweenRequestsHrs());
     RealDistribution routeLengthDistribution = new TriangularDistribution(randomGenerator,
         scenario.getRouteLengthDistribution()[0],
         scenario.getRouteLengthDistribution()[1],
@@ -76,7 +76,7 @@ public class Model extends com.amalgamasimulation.engine.Model {
 
   private void initializeTrucks() {
     for (int i = 0; i < scenario.getTruckCount(); i++) {
-      trucks.add(new Truck(String.valueOf(i + 1), String.valueOf(i + 1), scenario.getTruckSpeed(), engine()));
+      trucks.add(new Truck(i + 1, String.valueOf(i + 1), scenario.getTruckSpeed(), engine()));
     }
   }
 

@@ -3,54 +3,54 @@ package tutorial.scenario;
 import java.time.LocalDateTime;
 
 public class Scenario {
-  private final int truckCount;
-  private final double truckSpeed;
-  private final double intervalBetweenRequests;
-  private final double maxDeliveryTimeHrs;
-  private final double[] routeLengthDistribution;
-  private final LocalDateTime simulationStartDt;
-  private final LocalDateTime simulationEndDt;
+    private final int truckCount;
+    private final double truckSpeed;
+    private final double intervalBetweenRequestsHrs;
+    private final double maxDeliveryTimeHrs;
+    private final double[] routeLengthDistribution;
+    private final LocalDateTime simulationStartDt;
+    private final LocalDateTime simulationEndDt;
 
-  public Scenario(int truckCount,
-      double truckSpeed,
-      double intervalBetweenRequests,
-      double maxDeliveryTimeHrs,
-      double[] routeLengthDistribution,
-      LocalDateTime simulationStartDt, LocalDateTime simulationEndDt) {
-    this.truckCount = truckCount;
-    this.truckSpeed = truckSpeed;
-    this.intervalBetweenRequests = intervalBetweenRequests;
-    this.maxDeliveryTimeHrs = maxDeliveryTimeHrs;
-    this.routeLengthDistribution = routeLengthDistribution;
-    this.simulationStartDt = simulationStartDt;
-    this.simulationEndDt = simulationEndDt;
-  }
+    public Scenario(int truckCount,
+                    double truckSpeed,
+                    double intervalBetweenRequestsHrs,
+                    double maxDeliveryTimeHrs,
+                    double[] routeLengthDistribution,
+                    LocalDateTime simulationStartDt, LocalDateTime simulationEndDt) {
+        this.truckCount = truckCount;
+        this.truckSpeed = truckSpeed;
+        this.intervalBetweenRequestsHrs = intervalBetweenRequestsHrs;
+        this.maxDeliveryTimeHrs = maxDeliveryTimeHrs;
+        this.routeLengthDistribution = routeLengthDistribution;
+        this.simulationStartDt = simulationStartDt;
+        this.simulationEndDt = simulationEndDt;
+    }
 
-  public int getTruckCount() {
-    return truckCount;
-  }
+    public int getTruckCount() {
+        return truckCount;
+    }
 
-  public double getTruckSpeed() {
-    return truckSpeed;
-  }
+    public double getTruckSpeed() {
+        return truckSpeed;
+    }
 
-  public double getIntervalBetweenRequests() {
-    return intervalBetweenRequests;
-  }
+    public double getIntervalBetweenRequestsHrs() {
+        return intervalBetweenRequestsHrs;
+    }
 
-  public double getMaxDeliveryTimeHrs() {
-    return maxDeliveryTimeHrs;
-  }
+    public double getMaxDeliveryTimeHrs() {
+        return maxDeliveryTimeHrs;
+    }
 
-  public double[] getRouteLengthDistribution() {
-    return routeLengthDistribution;
-  }
+    public double[] getRouteLengthDistribution() {
+        return routeLengthDistribution;
+    }
 
-  public LocalDateTime getSimulationStartDt() {
-    return simulationStartDt;
-  }
+    public LocalDateTime getSimulationStartDt() {
+        return simulationStartDt;
+    }
 
-  public LocalDateTime getSimulationEndDt() {
-    return simulationEndDt;
-  }
+    public LocalDateTime getSimulationEndDt() {
+        return simulationEndDt;
+    }
 }

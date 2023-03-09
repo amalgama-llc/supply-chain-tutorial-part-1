@@ -11,7 +11,7 @@ public class Truck {
   private final double OWNERSHIP_COST_PER_HOUR = 10;
   private final double USAGE_COST_PER_HOUR = 25;
 
-  private final String id;
+  private final int id;
   private final String name;
   private final double speed;
   private final Engine engine;
@@ -21,14 +21,14 @@ public class Truck {
   private TransportationTask currentTask;
   private List<TransportationTask> taskHistory = new ArrayList<>();
 
-  public Truck(String id, String name, double speed, Engine engine) {
+  public Truck(int id, String name, double speed, Engine engine) {
     this.id = id;
     this.name = name;
     this.engine = engine;
     this.speed = speed;
   }
 
-  public String getId() {
+  public int getId() {
     return id;
   }
 
