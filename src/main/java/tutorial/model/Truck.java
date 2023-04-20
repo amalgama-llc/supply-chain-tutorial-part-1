@@ -5,76 +5,86 @@ import java.util.List;
 import java.util.Optional;
 
 import com.amalgamasimulation.engine.Engine;
-import com.amalgamasimulation.utils.Pair;
+
+import tutorial.scenario.Store;
 
 public class Truck {
-  private final double OWNERSHIP_COST_PER_HOUR = 10;
-  private final double USAGE_COST_PER_HOUR = 25;
+	private static final double OWNERSHIP_COST_PER_HOUR_USD = 10;
+	private static final double USAGE_COST_PER_HOUR_USD = 25;
+	
+	private final String id;
+	private final String name;
+	private final double speed;
+	private final Engine engine;
+	
+	private record ActivePeriod(double startTime, double endTime) {}
 
-  private final int id;
-  private final String name;
-  private final double speed;
-  private final Engine engine;
+	private List<ActivePeriod> activePeriods = new ArrayList<>();
+	private Optional<Double> currentActivePeriodStartTime = Optional.empty();
+	private Store currentStore;
+	private TransportationTask currentTask;
+	private List<TransportationTask> taskHistory = new ArrayList<>();
 
-  private List<Pair<Double, Double>> activePeriods = new ArrayList<>();
-  private Optional<Double> currentActivePeriodStartTime = Optional.empty();
-  private TransportationTask currentTask;
-  private List<TransportationTask> taskHistory = new ArrayList<>();
+	public Truck(String id, String name, double speed, Store initialStore, Engine engine) {
+		this.id = id;
+		this.name = name;
+		this.engine = engine;
+		this.speed = speed;
+		this.currentStore = initialStore;
+	}
 
-  public Truck(int id, String name, double speed, Engine engine) {
-    this.id = id;
-    this.name = name;
-    this.engine = engine;
-    this.speed = speed;
-  }
+	public String getId() {
+		return id;
+	}
+	
+	public String getName() {
+		return name;
+	}
+	
+	public double getSpeed() {
+		return speed;
+	}
+	
+	public Store getCurrentStore() {
+		return currentStore;
+	}
+	
+	public TransportationTask getCurrentTask() {
+		return currentTask;
+	}
+	
+	public List<TransportationTask> getTaskHistory() {
+		return taskHistory;
+	}
+	
+	public boolean isIdle() {
+		return currentTask == null;
+	}
 
-  public int getId() {
-    return id;
-  }
+	public double getExpenses() {
+		double ownershipDurationHours = engine.time() / engine.hour();
+		double usageDurationHours = getAllActivePeriodsDurationHrs();
+		return ownershipDurationHours * OWNERSHIP_COST_PER_HOUR_USD + usageDurationHours * USAGE_COST_PER_HOUR_USD; 
+	}
 
-  public String getName() {
-    return name;
-  }
+	private double getAllActivePeriodsDurationHrs() {
+		double result = activePeriods.stream().mapToDouble(p -> p.endTime - p.startTime).sum();
+		if (currentActivePeriodStartTime.isPresent()) {
+			result += (engine.time() - currentActivePeriodStartTime.get()) / engine.hour();
+		}
+		return result;
+	}
 
-  public double getSpeed() {
-    return speed;
-  }
+	public void onTaskStarted(TransportationTask task) {
+		currentActivePeriodStartTime = Optional.of(engine.time());
+		currentTask = task;
+		taskHistory.add(currentTask);
+	}
 
-  public TransportationTask getCurrentTask() {
-    return currentTask;
-  }
-
-  public List<TransportationTask> getTaskHistory() {
-    return taskHistory;
-  }
-
-  public boolean isIdle() {
-    return currentTask == null;
-  }
-
-  public double getExpenses() {
-    double ownershipDurationHours = engine.time() / engine.hour();
-    double usageDurationHours = getAllActivePeriodsDurationHrs();
-    return ownershipDurationHours * OWNERSHIP_COST_PER_HOUR + usageDurationHours * USAGE_COST_PER_HOUR;
-  }
-
-  private double getAllActivePeriodsDurationHrs() {
-    double result = activePeriods.stream().mapToDouble(p -> p.second - p.first).sum();
-    if (currentActivePeriodStartTime.isPresent()) {
-      result += (engine.time() - currentActivePeriodStartTime.get()) / engine.hour();
-    }
-    return result;
-  }
-
-  public void onTaskStarted(TransportationTask task) {
-    currentActivePeriodStartTime = Optional.of(engine.time());
-    currentTask = task;
-    taskHistory.add(currentTask);
-  }
-
-  public void onTaskCompleted() {
-    activePeriods.add(new Pair<>(currentActivePeriodStartTime.get(), engine.time()));
-    currentActivePeriodStartTime = Optional.empty();
-    currentTask = null;
-  }
+	public void onTaskCompleted() {
+		activePeriods.add(new ActivePeriod(currentActivePeriodStartTime.get(), engine.time()));
+		currentActivePeriodStartTime = Optional.empty();
+		currentStore = currentTask.getRequest().getStore();
+		currentTask = null;
+	}
 }
