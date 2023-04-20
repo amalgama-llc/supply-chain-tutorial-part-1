@@ -1,7 +1,7 @@
-# Step 1: Simple Supply Chain Model
+# Part 1: Simple Supply Chain Model
 
 ## About
-This repository contains the source code for the [Step 1 in the Supply Chain Simulation Tutorial](https://platform.amalgamasimulation.com/amalgama/SupplyChainTutorial/platform_tutorial_step_1.html).
+This repository contains the source code for the [Part 1 of the Supply Chain Simulation Tutorial](https://platform.amalgamasimulation.com/amalgama/SupplyChainTutorial/sc_tutorial_part_1.html).
 
 The application simulates the functionality of a simple supply chain.
 A set of experiments is run to find the optimal number of trucks to move cargo among warehouses and stores.
@@ -19,7 +19,7 @@ mvn clean package
 4. Start the console application: 
 
 ```
-java -jar target/tutorial-step-1-1.0.jar
+java -jar target/sc-tutorial-part-1-1.0.jar
 ```
 
 This gets printed to the console:
