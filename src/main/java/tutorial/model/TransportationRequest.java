@@ -1,9 +1,5 @@
 package tutorial.model;
 
-import tutorial.scenario.Asset;
-import tutorial.scenario.Store;
-import tutorial.scenario.Warehouse;
-
 public class TransportationRequest {
 	private final int id;
 	private final Warehouse sourceAsset;

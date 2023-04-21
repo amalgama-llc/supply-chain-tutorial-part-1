@@ -7,8 +7,6 @@ import java.util.function.ToDoubleBiFunction;
 
 import com.amalgamasimulation.engine.Engine;
 
-import tutorial.scenario.Asset;
-
 public class Dispatcher {
 	private final Engine engine;
 	private final Model model;
@@ -16,8 +14,8 @@ public class Dispatcher {
 	private int lastTaskId = 0;
 	private List<TransportationTask> transportationTasks = new ArrayList<>();
 
-	public Dispatcher(Engine engine, Model model, ToDoubleBiFunction<Asset, Asset> routeLengthGetter) {
-		this.engine = engine;
+	public Dispatcher(Model model, ToDoubleBiFunction<Asset, Asset> routeLengthGetter) {
+		this.engine = model.engine();
 		this.model = model;
 		this.routeLengthGetter = routeLengthGetter;
 	}

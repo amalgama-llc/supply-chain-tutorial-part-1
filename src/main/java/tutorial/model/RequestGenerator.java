@@ -9,31 +9,20 @@ import org.apache.commons.math3.random.RandomGenerator;
 
 import com.amalgamasimulation.engine.Engine;
 
-import tutorial.scenario.Store;
-import tutorial.scenario.Warehouse;
-
 public class RequestGenerator {
 	private final Engine engine;
 	private final RealDistribution newRequestIntervalDistribution;
-	private final RandomGenerator randomGenerator;
-	private final List<Warehouse> warehouses;
-	private final List<Store> stores;
-	
 	private final double maxDeliveryTimeHrs;
 	private List<Consumer<TransportationRequest>> newRequestHandlers = new ArrayList<>();
 	private int lastUsedRequestId = 0;
+	private final Model model;
 
-	public RequestGenerator(Engine engine, 
+	public RequestGenerator(Model model, 
 							RealDistribution newRequestIntervalDistribution,
-							RandomGenerator randomGenerator,
-							List<Warehouse> warehouses,
-							List<Store> stores,
 							double maxDeliveryTimeHrs) {
-		this.engine = engine;
+		this.engine = model.engine();
+		this.model = model;
 		this.newRequestIntervalDistribution = newRequestIntervalDistribution;
-		this.randomGenerator = randomGenerator;
-		this.warehouses = warehouses;
-		this.stores = stores;
 		this.maxDeliveryTimeHrs = maxDeliveryTimeHrs;
 		engine.scheduleRelative(0, this::createTransportationRequest);
 	}
@@ -43,8 +32,8 @@ public class RequestGenerator {
 	}
 	
 	private void createTransportationRequest() {
-		Warehouse from = warehouses.get(randomGenerator.nextInt(warehouses.size()));
-		Store to = stores.get(randomGenerator.nextInt(stores.size()));
+		Warehouse from = model.getWarehouses().get(model.getRandomGenerator().nextInt(model.getWarehouses().size()));
+		Store to = model.getStores().get(model.getRandomGenerator().nextInt(model.getStores().size()));
 		TransportationRequest newRequest = new TransportationRequest(getNextRequestId(), from, to,
 				engine.time(), engine.time() + maxDeliveryTimeHrs * engine.hour());
 		newRequestHandlers.forEach(handler -> handler.accept(newRequest));

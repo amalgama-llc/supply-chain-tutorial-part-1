@@ -5,8 +5,6 @@ import java.util.function.ToDoubleBiFunction;
 
 import com.amalgamasimulation.engine.Engine;
 
-import tutorial.scenario.Asset;
-
 public class TransportationTask {
 	private final String id;
 	private final Truck truck;

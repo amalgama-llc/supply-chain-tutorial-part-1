@@ -6,9 +6,6 @@ import java.util.Optional;
 
 import com.amalgamasimulation.engine.Engine;
 
-import tutorial.scenario.Asset;
-import tutorial.scenario.Store;
-
 public class Truck {
 	private static final double OWNERSHIP_COST_PER_HOUR_USD = 10;
 	private static final double USAGE_COST_PER_HOUR_USD = 25;
