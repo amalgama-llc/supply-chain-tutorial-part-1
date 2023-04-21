@@ -5,13 +5,13 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import org.apache.commons.math3.distribution.RealDistribution;
-import org.apache.commons.math3.random.RandomGenerator;
 
 import com.amalgamasimulation.engine.Engine;
 
 public class RequestGenerator {
 	private final Engine engine;
 	private final RealDistribution newRequestIntervalDistribution;
+	
 	private final double maxDeliveryTimeHrs;
 	private List<Consumer<TransportationRequest>> newRequestHandlers = new ArrayList<>();
 	private int lastUsedRequestId = 0;

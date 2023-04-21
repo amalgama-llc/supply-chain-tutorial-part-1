@@ -46,8 +46,8 @@ public class TransportationTask {
 		double warehouseToStoreDistance = routeLengthGetter.applyAsDouble(request.getSourceAsset(), request.getDestAsset());
 		double totalTravelTime = (toWarehouseDistance + warehouseToStoreDistance) / truck.getSpeed();
 		//System.out.println("%.3f\tTask #%s : TRANSPORTATION_STARTED. Request #%s; Truck #%s at %s; From %s -> To %s"
-		//		.formatted(engine.time(), getId(), request.getId(), truck.getId(), truck.getCurrentStore().getName(), 
-		//				request.getWarehouse().getName(), request.getStore().getName()));
+		//		.formatted(engine.time(), getId(), request.getId(), truck.getId(), truck.getCurrentAsset().getName(), 
+		//				request.getSourceAsset().getName(), request.getDestAsset().getName()));
 		truck.onTaskStarted(this);
 		engine.scheduleRelative(totalTravelTime, () -> {
 			truck.onTaskCompleted();

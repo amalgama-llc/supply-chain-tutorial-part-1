@@ -19,14 +19,16 @@ import tutorial.scenario.Scenario;
 public class Model extends com.amalgamasimulation.engine.Model {
 
 	private final Scenario scenario;
-	private Mapping mapping = new Mapping();
 	private final RandomGenerator randomGenerator = new DefaultRandomGenerator(1);
-	
+	private Mapping mapping = new Mapping();
 	private List<Warehouse> warehouses = new ArrayList<>();
 	private List<Store> stores = new ArrayList<>();
 	private List<Truck> trucks = new ArrayList<>();
 	private List<TransportationRequest> requests = new ArrayList<>();
 	private Queue<TransportationRequest> waitingRequests = new LinkedList<>();
+
+	private final Dispatcher dispatcher;
+
 	private final Statistics statistics;
 	
 	public Model(Engine engine, Scenario scenario) {
@@ -34,18 +36,17 @@ public class Model extends com.amalgamasimulation.engine.Model {
 		engine.setTemporal(scenario.getSimulationStartDt(), ChronoUnit.HOURS);
 		engine.scheduleStop(engine.dateToTime(scenario.getSimulationEndDt()), "Stop");
 		this.scenario = scenario;
-
+	
+		initializeModelObjects();
+	
 		RealDistribution newRequestIntervalDistribution = new ExponentialDistribution(randomGenerator, scenario.getIntervalBetweenRequestsHrs());
 		RequestGenerator requestGenerator = new RequestGenerator(this, newRequestIntervalDistribution, scenario.getMaxDeliveryTimeHrs());
-		
-		initializeModelObjects();
-
 		requestGenerator.addNewRequestHandler(this::addRequest);
-		
-		Dispatcher dispatcher = new Dispatcher(this, this::getRouteLength);
+
+		dispatcher = new Dispatcher(this, this::getRouteLength);
 		requestGenerator.addNewRequestHandler(dispatcher::onNewRequest);
-		
-		this.statistics = new Statistics(engine, this);
+	
+		this.statistics = new Statistics(this);
 	}
 	
 	private double getRouteLength(Asset asset1, Asset asset2) {
@@ -56,9 +57,9 @@ public class Model extends com.amalgamasimulation.engine.Model {
 		initializeAssets();
 		initializeTrucks();
 	}
-
+	
 	private void initializeTrucks() {
-		Store initialAssetForTrucks = getStores().get(0);
+		var initialAssetForTrucks = getStores().get(0);
 		for (int i = 0; i < scenario.getTruckCount(); i++) {
 			trucks.add(new Truck(String.valueOf(i + 1), String.valueOf(i + 1), scenario.getTruckSpeed(), initialAssetForTrucks, engine()));
 		}
@@ -84,7 +85,7 @@ public class Model extends com.amalgamasimulation.engine.Model {
 	public List<Truck> getTrucks() {
 		return trucks;
 	}
-	
+
 	public List<Warehouse> getWarehouses() {
 		return warehouses;
 	}

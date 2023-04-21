@@ -7,8 +7,8 @@ public class Statistics {
 	private final Engine engine;
 	private final Model model;
 	
-	public Statistics(Engine engine, Model model) {
-		this.engine = engine;
+	public Statistics(Model model) {
+		this.engine = model.engine();
 		this.model = model;
 	}
 	
