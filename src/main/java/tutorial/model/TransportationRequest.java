@@ -1,21 +1,22 @@
 package tutorial.model;
 
+import tutorial.scenario.Asset;
 import tutorial.scenario.Store;
 import tutorial.scenario.Warehouse;
 
 public class TransportationRequest {
 	private final int id;
-	private final Warehouse warehouse;
-	private final Store store;
+	private final Warehouse sourceAsset;
+	private final Store destAsset;
 	private final double createdTime;
 	private final double deadlineTime;
 	private boolean completed;
 	private double completedTime;
 	
-	public TransportationRequest(int id, Warehouse warehouse, Store store, double beginTime, double deadlineTime) {
+	public TransportationRequest(int id, Warehouse sourceAsset, Store destAsset, double beginTime, double deadlineTime) {
 		this.id = id;
-		this.warehouse = warehouse;
-		this.store = store;
+		this.sourceAsset = sourceAsset;
+		this.destAsset = destAsset;
 		this.createdTime = beginTime;
 		this.deadlineTime = deadlineTime;
 		//System.out.println(String.format("%.3f\tRequest #%s created", createdTime, id));
@@ -25,12 +26,12 @@ public class TransportationRequest {
 		return id;
 	}
 	
-	public Warehouse getWarehouse() {
-		return warehouse;
+	public Asset getSourceAsset() {
+		return sourceAsset;
 	}
 	
-	public Store getStore() {
-		return store;
+	public Asset getDestAsset() {
+		return destAsset;
 	}
 
 	public double getCreatedTime() {

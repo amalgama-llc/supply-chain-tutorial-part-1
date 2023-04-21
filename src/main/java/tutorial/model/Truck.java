@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import com.amalgamasimulation.engine.Engine;
 
+import tutorial.scenario.Asset;
 import tutorial.scenario.Store;
 
 public class Truck {
@@ -21,7 +22,7 @@ public class Truck {
 
 	private List<ActivePeriod> activePeriods = new ArrayList<>();
 	private Optional<Double> currentActivePeriodStartTime = Optional.empty();
-	private Store currentStore;
+	private Asset currentAsset;
 	private TransportationTask currentTask;
 	private List<TransportationTask> taskHistory = new ArrayList<>();
 
@@ -30,7 +31,7 @@ public class Truck {
 		this.name = name;
 		this.engine = engine;
 		this.speed = speed;
-		this.currentStore = initialStore;
+		this.currentAsset = initialStore;
 	}
 
 	public String getId() {
@@ -45,8 +46,8 @@ public class Truck {
 		return speed;
 	}
 	
-	public Store getCurrentStore() {
-		return currentStore;
+	public Asset getCurrentAsset() {
+		return currentAsset;
 	}
 	
 	public TransportationTask getCurrentTask() {
@@ -84,7 +85,7 @@ public class Truck {
 	public void onTaskCompleted() {
 		activePeriods.add(new ActivePeriod(currentActivePeriodStartTime.get(), engine.time()));
 		currentActivePeriodStartTime = Optional.empty();
-		currentStore = currentTask.getRequest().getStore();
+		currentAsset = currentTask.getRequest().getDestAsset();
 		currentTask = null;
 	}
 }
