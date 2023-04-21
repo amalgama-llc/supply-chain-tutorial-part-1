@@ -1,27 +1,22 @@
 package tutorial.model;
 
 import java.util.function.Consumer;
-import java.util.function.ToDoubleBiFunction;
-
-import com.amalgamasimulation.engine.Engine;
 
 public class TransportationTask {
 	private final String id;
 	private final Truck truck;
 	private final TransportationRequest request;
-	private final ToDoubleBiFunction<Asset, Asset> routeLengthGetter;
 	private final Consumer<Truck> truckReleaseHandler;
-	private final Engine engine;
+	private final Model model;
 	private double beginTime;
 
-	public TransportationTask(String id, Truck truck, TransportationRequest request, ToDoubleBiFunction<Asset, Asset> routeLengthGetter,
-			Consumer<Truck> truckReleaseHandler, Engine engine) {
+	public TransportationTask(String id, Truck truck, TransportationRequest request,
+			Consumer<Truck> truckReleaseHandler, Model model) {
 		this.id = id;
 		this.truck = truck;
 		this.request = request;
-		this.routeLengthGetter = routeLengthGetter;
 		this.truckReleaseHandler = truckReleaseHandler;
-		this.engine = engine;
+		this.model = model;
 	}
 
 	public String getId() {
@@ -41,17 +36,17 @@ public class TransportationTask {
 	}
 
 	public void execute() {
-		this.beginTime = engine.time();
-		double toWarehouseDistance = routeLengthGetter.applyAsDouble(truck.getCurrentAsset(), request.getSourceAsset());
-		double warehouseToStoreDistance = routeLengthGetter.applyAsDouble(request.getSourceAsset(), request.getDestAsset());
+		this.beginTime = model.engine().time();
+		double toWarehouseDistance = model.getRouteLength(truck.getCurrentAsset(), request.getSourceAsset());
+		double warehouseToStoreDistance = model.getRouteLength(request.getSourceAsset(), request.getDestAsset());
 		double totalTravelTime = (toWarehouseDistance + warehouseToStoreDistance) / truck.getSpeed();
 		//System.out.println("%.3f\tTask #%s : TRANSPORTATION_STARTED. Request #%s; Truck #%s at %s; From %s -> To %s"
 		//		.formatted(engine.time(), getId(), request.getId(), truck.getId(), truck.getCurrentAsset().getName(), 
 		//				request.getSourceAsset().getName(), request.getDestAsset().getName()));
 		truck.onTaskStarted(this);
-		engine.scheduleRelative(totalTravelTime, () -> {
+		model.engine().scheduleRelative(totalTravelTime, () -> {
 			truck.onTaskCompleted();
-			request.setCompletedTime(engine.time());
+			request.setCompletedTime(model.engine().time());
 			//System.out.println("%.3f\tTask #%s : TRANSPORTATION_FINISHED".formatted(engine.time(), getId()));
 			truckReleaseHandler.accept(truck);
 		});

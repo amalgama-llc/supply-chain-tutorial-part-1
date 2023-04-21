@@ -3,21 +3,14 @@ package tutorial.model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.ToDoubleBiFunction;
-
-import com.amalgamasimulation.engine.Engine;
 
 public class Dispatcher {
-	private final Engine engine;
 	private final Model model;
-	private final ToDoubleBiFunction<Asset, Asset> routeLengthGetter;
 	private int lastTaskId = 0;
 	private List<TransportationTask> transportationTasks = new ArrayList<>();
 
-	public Dispatcher(Model model, ToDoubleBiFunction<Asset, Asset> routeLengthGetter) {
-		this.engine = model.engine();
+	public Dispatcher(Model model) {
 		this.model = model;
-		this.routeLengthGetter = routeLengthGetter;
 	}
 
 	public List<TransportationTask> getTransportationTasks() {
@@ -34,7 +27,7 @@ public class Dispatcher {
 	}
 
 	private void startTransportation(Truck truck, TransportationRequest request) {
-		TransportationTask task = new TransportationTask(String.valueOf(++lastTaskId), truck, request, routeLengthGetter, this::onTruckRelease, engine);
+		TransportationTask task = new TransportationTask(String.valueOf(++lastTaskId), truck, request, this::onTruckRelease, model);
 		transportationTasks.add(task);
 		task.execute();
 	}

@@ -43,13 +43,13 @@ public class Model extends com.amalgamasimulation.engine.Model {
 		RequestGenerator requestGenerator = new RequestGenerator(this, newRequestIntervalDistribution, scenario.getMaxDeliveryTimeHrs());
 		requestGenerator.addNewRequestHandler(this::addRequest);
 
-		dispatcher = new Dispatcher(this, this::getRouteLength);
+		dispatcher = new Dispatcher(this);
 		requestGenerator.addNewRequestHandler(dispatcher::onNewRequest);
 	
 		this.statistics = new Statistics(this);
 	}
 	
-	private double getRouteLength(Asset asset1, Asset asset2) {
+	public double getRouteLength(Asset asset1, Asset asset2) {
 		return scenario.getRouteLength(mapping.assetsMap.key(asset1), mapping.assetsMap.key(asset2));
 	}
 	
