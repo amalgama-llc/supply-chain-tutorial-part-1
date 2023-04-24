@@ -46,7 +46,7 @@ public class Model extends com.amalgamasimulation.engine.Model {
 		dispatcher = new Dispatcher(this);
 		requestGenerator.addNewRequestHandler(dispatcher::onNewRequest);
 	
-		this.statistics = new Statistics(this);
+		statistics = new Statistics(this);
 	}
 	
 	public double getRouteLength(Asset asset1, Asset asset2) {

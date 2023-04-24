@@ -41,13 +41,13 @@ public class TransportationTask {
 		double warehouseToStoreDistance = model.getRouteLength(request.getSourceAsset(), request.getDestAsset());
 		double totalTravelTime = (toWarehouseDistance + warehouseToStoreDistance) / truck.getSpeed();
 		//System.out.println("%.3f\tTask #%s : TRANSPORTATION_STARTED. Request #%s; Truck #%s at %s; From %s -> To %s"
-		//		.formatted(engine.time(), getId(), request.getId(), truck.getId(), truck.getCurrentAsset().getName(), 
+		//		.formatted(model.engine().time(), getId(), request.getId(), truck.getId(), truck.getCurrentAsset().getName(), 
 		//				request.getSourceAsset().getName(), request.getDestAsset().getName()));
 		truck.onTaskStarted(this);
 		model.engine().scheduleRelative(totalTravelTime, () -> {
 			truck.onTaskCompleted();
 			request.setCompletedTime(model.engine().time());
-			//System.out.println("%.3f\tTask #%s : TRANSPORTATION_FINISHED".formatted(engine.time(), getId()));
+		//	System.out.println("%.3f\tTask #%s : TRANSPORTATION_FINISHED".formatted(model.engine().time(), getId()));
 			truckReleaseHandler.accept(truck);
 		});
 	}

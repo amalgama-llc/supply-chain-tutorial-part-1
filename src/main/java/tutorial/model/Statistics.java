@@ -1,14 +1,11 @@
 package tutorial.model;
 
-import com.amalgamasimulation.engine.Engine;
 import com.amalgamasimulation.utils.Utils;
 
 public class Statistics {
-	private final Engine engine;
 	private final Model model;
 	
 	public Statistics(Model model) {
-		this.engine = model.engine();
 		this.model = model;
 	}
 	
@@ -23,7 +20,7 @@ public class Statistics {
 			if (request.isCompleted() && request.getCompletedTime() <= request.getDeadlineTime()) {
 				fulfilledInTimeRequests++;
 			}
-			if (request.isCompleted() || request.getDeadlineTime() <= engine.time()) {
+			if (request.isCompleted() || request.getDeadlineTime() <= model.engine().time()) {
 				completedOrWillBeBelatedRequests++;
 			}
 		}

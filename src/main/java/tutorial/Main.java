@@ -13,7 +13,6 @@ import tutorial.scenario.Warehouse;
 import tutorial.model.Statistics;
 
 public class Main {
-
 	private static final double TRUCK_SPEED = 40;
 	private static final double INTERVAL_BETWEEN_REQUESTS_HRS = 0.5;
 	private static final double MAX_DELIVERY_TIME_HRS = 6;
@@ -32,15 +31,15 @@ public class Main {
 		Store st3 = new Store("st3", "Store 3");
 		stores = List.of(st1, st2, st3);
 		routeLengthContainer = new RouteLengthContainer();
-		routeLengthContainer.add(wh1, st1, 10);
-		routeLengthContainer.add(wh1, st2, 20);
-		routeLengthContainer.add(wh1, st3, 30);
+		routeLengthContainer.add(wh1, st1, 40);
+		routeLengthContainer.add(wh1, st2, 40);
+		routeLengthContainer.add(wh1, st3, 50);
 		routeLengthContainer.add(wh2, st1, 40);
-		routeLengthContainer.add(wh2, st2, 50);
-		routeLengthContainer.add(wh2, st3, 60);
-		routeLengthContainer.add(wh3, st1, 70);
-		routeLengthContainer.add(wh3, st2, 80);
-		routeLengthContainer.add(wh3, st3, 90);
+		routeLengthContainer.add(wh2, st2, 40);
+		routeLengthContainer.add(wh2, st3, 50);
+		routeLengthContainer.add(wh3, st1, 50);
+		routeLengthContainer.add(wh3, st2, 50);
+		routeLengthContainer.add(wh3, st3, 40);
 	}
 	
 	public static void main(String[] args) {
@@ -48,7 +47,7 @@ public class Main {
 	}
 	
 	private static void runScenarioAnalysis() {
-		for (int numberOfTrucks = 1; numberOfTrucks <= 15; numberOfTrucks++) {
+		for (int numberOfTrucks = 1; numberOfTrucks <= 10; numberOfTrucks++) {
 			Scenario scenario = new Scenario(	numberOfTrucks, 
 												TRUCK_SPEED,
 												INTERVAL_BETWEEN_REQUESTS_HRS,
@@ -58,7 +57,7 @@ public class Main {
 												routeLengthContainer,
 												LocalDateTime.of(2023, 1, 1, 0, 0), 
 												LocalDateTime.of(2023, 2, 1, 0, 0));
-			runExperimentWithStats(scenario);
+			runExperimentWithStats(scenario, "scenario");
 		}
 	}
 
@@ -85,7 +84,7 @@ public class Main {
 											routeLengthContainer,
 											LocalDateTime.of(2023, 1, 1, 0, 0), 
 											LocalDateTime.of(2023, 1, 1, 12, 0));
-		runExperimentWithStats(scenario);
+		runExperimentWithStats(scenario, "scenario");
 	}
 
 	private static void runExperiment(Scenario scenario) {
@@ -93,14 +92,19 @@ public class Main {
 		experiment.run();
 	}
 
-	private static void runExperimentWithStats(Scenario scenario) {
+
+	private static boolean headerPrinted = false;
+	private static void runExperimentWithStats(Scenario scenario, String scenarioName) {
 		ExperimentRun experiment = new ExperimentRun(scenario, new Engine());
 		experiment.run();
 		Statistics statistics = experiment.getStatistics();
-		System.out.println("Trucks count:\t" + scenario.getTruckCount() 
-			+ "\tSL:\t" + Formats.getDefaultFormats().percentTwoDecimals(statistics.getServiceLevel())
-			+ "\tExpenses:\t" + Formats.getDefaultFormats().dollarTwoDecimals(statistics.getExpenses())
-			+ "\tExpenses/SL:\t" + Formats.getDefaultFormats().dollarTwoDecimals(statistics.getExpensesPerServiceLevelPercent()));
+		if (!headerPrinted) {
+			System.out.println("Scenario            \tTrucks count\tSL\tExpenses\tExpenses/SL");
+			headerPrinted = true;
+		}
+		System.out.println("%-20s\t%12s\t%s\t%s\t%s".formatted(scenarioName, scenario.getTruckCount(),
+				Formats.getDefaultFormats().percentTwoDecimals(statistics.getServiceLevel()),
+				Formats.getDefaultFormats().dollarTwoDecimals(statistics.getExpenses()),
+				Formats.getDefaultFormats().dollarTwoDecimals(statistics.getExpensesPerServiceLevelPercent())));
 	}
-
 }
