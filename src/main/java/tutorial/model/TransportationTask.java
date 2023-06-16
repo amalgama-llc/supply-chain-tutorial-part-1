@@ -6,16 +6,16 @@ public class TransportationTask {
 	private final String id;
 	private final Truck truck;
 	private final TransportationRequest request;
-	private final Consumer<Truck> truckReleaseHandler;
+	private final Consumer<TransportationTask> taskCompletedHandler;
 	private final Model model;
 	private double beginTime;
 
 	public TransportationTask(String id, Truck truck, TransportationRequest request,
-			Consumer<Truck> truckReleaseHandler, Model model) {
+			Consumer<TransportationTask> taskCompletedHandler, Model model) {
 		this.id = id;
 		this.truck = truck;
 		this.request = request;
-		this.truckReleaseHandler = truckReleaseHandler;
+		this.taskCompletedHandler = taskCompletedHandler;
 		this.model = model;
 	}
 
@@ -48,7 +48,7 @@ public class TransportationTask {
 			truck.onTaskCompleted();
 			request.setCompletedTime(model.engine().time());
 		//	System.out.println("%.3f\tTask #%s : TRANSPORTATION_FINISHED".formatted(model.engine().time(), getId()));
-			truckReleaseHandler.accept(truck);
+			taskCompletedHandler.accept(this);
 		});
 	}
 
