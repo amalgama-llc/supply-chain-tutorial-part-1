@@ -4,16 +4,15 @@ import java.util.function.Consumer;
 
 public class TransportationTask {
 	private final String id;
-	private final Truck truck;
+	private Truck truck;
 	private final TransportationRequest request;
 	private final Consumer<TransportationTask> taskCompletedHandler;
 	private final Model model;
 	private double beginTime;
 
-	public TransportationTask(String id, Truck truck, TransportationRequest request,
+	public TransportationTask(String id, TransportationRequest request,
 			Consumer<TransportationTask> taskCompletedHandler, Model model) {
 		this.id = id;
-		this.truck = truck;
 		this.request = request;
 		this.taskCompletedHandler = taskCompletedHandler;
 		this.model = model;
@@ -35,7 +34,8 @@ public class TransportationTask {
 		return beginTime;
 	}
 
-	public void execute() {
+	public void execute(Truck truck) {
+		this.truck = truck;
 		this.beginTime = model.engine().time();
 		double toWarehouseDistance = model.getRouteLength(truck.getCurrentAsset(), request.getSourceAsset());
 		double warehouseToStoreDistance = model.getRouteLength(request.getSourceAsset(), request.getDestAsset());
