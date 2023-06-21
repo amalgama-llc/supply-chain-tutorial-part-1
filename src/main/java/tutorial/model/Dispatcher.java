@@ -29,24 +29,23 @@ public class Dispatcher {
 	public void onNewRequest(TransportationRequest newRequest) {
 		TransportationTask task = new TransportationTask(String.valueOf(++lastTaskId), newRequest, this::onTaskCompleted, model);
 		transportationTasks.add(task);
+		onTaskStateChanged(task);
 		Optional<Truck> freeTruck = model.getTrucks().stream().filter(Truck::isIdle).findFirst();
 		if (freeTruck.isPresent()) {
-			startTransportation(freeTruck.get(), task);
+			task.execute(freeTruck.get());
+			onTaskStateChanged(task);
 		} else {
 			addWaitingTask(task);
 		}
 	}
 
-	private void startTransportation(Truck truck, TransportationTask task) {
-		task.execute(truck);
-	}
-
 	private void onTaskCompleted(TransportationTask task) {
+		onTaskStateChanged(task);
 		TransportationTask waitingTask = getNextWaitingTask();
 		if (waitingTask != null) {
-			startTransportation(task.getTruck(), waitingTask);
+			waitingTask.execute(task.getTruck());
+			onTaskStateChanged(waitingTask);
 		}
-		taskStateChangeHandlers.forEach(handler -> handler.accept(task));
 	}
 	
 	private TransportationTask getNextWaitingTask() {
@@ -55,5 +54,9 @@ public class Dispatcher {
 	
 	private void addWaitingTask(TransportationTask task) {
 		waitingTasks.add(task);
+	}
+	
+	private void onTaskStateChanged(TransportationTask task) {
+		taskStateChangeHandlers.forEach(handler -> handler.accept(task));
 	}
 }
