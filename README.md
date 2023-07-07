@@ -1,7 +1,7 @@
 # Part 1: Simple Supply Chain Model
 
 ## About
-This repository contains the source code for the [Part 1 of the Supply Chain Simulation Tutorial](https://platform.amalgamasimulation.com/amalgama/SupplyChainTutorial/sc_tutorial_part_1.html).
+This repository contains the source code for the [Part 1 of the Supply Chain Simulation Tutorial](https://platform.amalgamasimulation.com/amalgama/SupplyChainTutorial/part1/sc_tutorial_part_1.html).
 
 The application simulates the functionality of a simple supply chain.
 A set of experiments is run to find the optimal number of trucks to move cargo among warehouses and stores.
