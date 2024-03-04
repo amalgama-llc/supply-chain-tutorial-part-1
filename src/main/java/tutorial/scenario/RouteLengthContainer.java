@@ -29,7 +29,7 @@ public class RouteLengthContainer {
 		}
 		double length = routeLengths.getOrDefault(warehouse, Map.of()).getOrDefault(store, Double.NaN);
 		if (Double.isNaN(length)) {
-			throw new IllegalStateException("No rouble length information found for the supplied assets");
+			throw new IllegalStateException("No route length information found for the supplied assets");
 		}
 		
 		return length;
